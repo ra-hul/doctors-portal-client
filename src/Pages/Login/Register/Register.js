@@ -1,9 +1,10 @@
-import { Button, Container, Grid, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Container, Grid, TextField, Typography, Button } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import login from "../../../images/login.png";
 
-const Login = () => {
+const Register = () => {
   const [loginData, setLoginData] = useState({});
 
   const handleOnChange = (e) => {
@@ -14,7 +15,10 @@ const Login = () => {
     setLoginData(newLoginData);
   };
   const handleLoginSubmit = (e) => {
-    alert("hello");
+    if (loginData.password !== loginData.password2) {
+      alert("Your Password is incorrect");
+      return;
+    }
     e.preventDefault();
   };
   return (
@@ -22,7 +26,7 @@ const Login = () => {
       <Grid container spacing={2}>
         <Grid item sx={{ mt: 8 }} xs={12} md={6}>
           <Typography variant="body1" gutterBottom>
-            Login
+            Register
           </Typography>
           <form onSubmit={handleLoginSubmit}>
             <TextField
@@ -44,15 +48,25 @@ const Login = () => {
               autoComplete="current-password"
               variant="standard"
             />
+            <TextField
+              sx={{ width: "75%", m: 1 }}
+              id="standard-password-input"
+              label=" Confirm Password"
+              name="password2"
+              onChange={handleOnChange}
+              type="password"
+              autoComplete="current-password"
+              variant="standard"
+            />
             <Button
               variant="contained"
               type="submit"
               sx={{ width: "75%", m: 1 }}
             >
-              Login
+              Register
             </Button>
-            <Link style={{ textDecoration: "none" }} to="/register">
-              <Button variant="text">New User? Please Register</Button>
+            <Link style={{ textDecoration: "none" }} to="/login">
+              <Button variant="text">Already Registered? Please Login</Button>
             </Link>
           </form>
         </Grid>
@@ -64,4 +78,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
