@@ -4,19 +4,22 @@ import Home from "./Pages/Home/Home/Home";
 import Appointment from "./Pages/Appointment/Appointment/Appointment";
 import Login from "./Pages/Login/Login/Login";
 import Register from "./Pages/Login/Register/Register";
+import AuthProvider from "./Context/AuthProvider/AuthProvider";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/appointment" element={<Appointment />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/home" element={<Home />}></Route>
-          <Route exact path="/" element={<Home />}></Route>
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/appointment" element={<Appointment />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/home" element={<Home />}></Route>
+            <Route exact path="/" element={<Home />}></Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
     </div>
   );
 }
