@@ -1,11 +1,22 @@
-import { Button, Container, Grid, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 import login from "../../../images/login.png";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({});
-
+  const { user, loginUser, isLoading, authError } = useAuth;
+  const location = useLocation();
+  const history = useNavigate();
   const handleOnChange = (e) => {
     const field = e.target.name;
     const value = e.target.value;
@@ -14,7 +25,7 @@ const Login = () => {
     setLoginData(newLoginData);
   };
   const handleLoginSubmit = (e) => {
-    alert("hello");
+    loginUser(loginData.email, loginData.password, location, history);
     e.preventDefault();
   };
   return (
@@ -54,6 +65,11 @@ const Login = () => {
             <Link style={{ textDecoration: "none" }} to="/register">
               <Button variant="text">New User? Please Register</Button>
             </Link>
+            {isLoading && <CircularProgress />}
+            {user?.email && (
+              <Alert severity="success">User Created successfully</Alert>
+            )}
+            {authError && <Alert severity="error">{authError}</Alert>}
           </form>
         </Grid>
         <Grid item xs={12} md={6}>
