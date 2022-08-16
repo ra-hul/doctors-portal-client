@@ -8,16 +8,17 @@ import {
   Alert,
 } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import login from "../../../images/login.png";
 import useAuth from "../../../hooks/useAuth";
 
 const Register = () => {
   const [loginData, setLoginData] = useState({});
+  const history = useNavigate();
   const { user, registerUser, isLoading, authError } = useAuth();
 
-  const handleOnChange = (e) => {
+  const handleOnBlur = (e) => {
     const field = e.target.name;
     const value = e.target.value;
     const newLoginData = { ...loginData };
@@ -29,7 +30,7 @@ const Register = () => {
       alert("Your Password is incorrect");
       return;
     }
-    registerUser(loginData.email, loginData.password);
+    registerUser(loginData.email, loginData.password, loginData.name, history);
 
     e.preventDefault();
   };
@@ -45,10 +46,19 @@ const Register = () => {
               <TextField
                 sx={{ width: "75%", m: 1 }}
                 id="standard-basic"
+                label="Your Name"
+                name="name"
+                type="text"
+                onBlur={handleOnBlur}
+                variant="standard"
+              />
+              <TextField
+                sx={{ width: "75%", m: 1 }}
+                id="standard-basic"
                 label="Your Email"
                 name="email"
                 type="email"
-                onChange={handleOnChange}
+                onBlur={handleOnBlur}
                 variant="standard"
               />
               <TextField
@@ -56,7 +66,7 @@ const Register = () => {
                 id="standard-password-input"
                 label="Your Password"
                 name="password"
-                onChange={handleOnChange}
+                onBlur={handleOnBlur}
                 type="password"
                 autoComplete="current-password"
                 variant="standard"
@@ -66,7 +76,7 @@ const Register = () => {
                 id="standard-password-input"
                 label=" Confirm Password"
                 name="password2"
-                onChange={handleOnChange}
+                onBlur={handleOnBlur}
                 type="password"
                 autoComplete="current-password"
                 variant="standard"

@@ -5,6 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
   onAuthStateChanged,
 } from "firebase/auth";
 
@@ -16,14 +19,23 @@ const useFirebase = () => {
   const [authError, setAuthError] = useState("");
 
   const auth = getAuth();
+  const googleProvider = new GoogleAuthProvider();
 
-  const registerUser = (email, password) => {
+  const registerUser = (email, password, name, history) => {
     setIsLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         setAuthError("");
-        // ...
+        const newUser = { email, displayName: name };
+
+        setUser(newUser);
+        // send name to firebase after creation
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        })
+          .then(() => {})
+          .catch((error) => {});
+        history.replace("/");
       })
       .catch((error) => {
         setAuthError(error.message);
@@ -32,6 +44,7 @@ const useFirebase = () => {
       .finally(() => setIsLoading(false));
   };
   const loginUser = (email, password, location, history) => {
+    setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const destination = location?.state?.from || "/";
@@ -39,6 +52,17 @@ const useFirebase = () => {
         // Signed in
         setAuthError("");
         // ...
+      })
+      .catch((error) => {
+        setAuthError(error.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
+  const signInWithGoogle = (location, history) => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        setAuthError("");
       })
       .catch((error) => {
         setAuthError(error.message);
@@ -74,6 +98,7 @@ const useFirebase = () => {
     authError,
     registerUser,
     loginUser,
+    signInWithGoogle,
     logOut,
   };
 };
